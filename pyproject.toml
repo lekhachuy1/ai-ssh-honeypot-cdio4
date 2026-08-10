@@ -1,0 +1,43 @@
+[build-system]
+requires = ["setuptools>=69", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ai-ssh-honeypot-cdio4"
+version = "0.1.0"
+description = "AI-assisted SSH honeypot for a CDIO 4 cybersecurity project"
+readme = "README.md"
+requires-python = ">=3.11"
+license = {text = "MIT"}
+authors = [
+  {name = "CDIO 4 Team"}
+]
+dependencies = [
+  "asyncssh>=2.21,<3",
+  "fastapi>=0.116,<1",
+  "uvicorn[standard]>=0.35,<1",
+  "sqlalchemy>=2.0.43,<3",
+  "pydantic-settings>=2.10,<3",
+  "jinja2>=3.1,<4",
+  "httpx>=0.28,<1",
+  "python-multipart>=0.0.20,<1"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest>=8,<10",
+  "pytest-asyncio>=1,<2",
+  "ruff>=0.12,<1"
+]
+
+[tool.setuptools.packages.find]
+include = ["app*"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
+
+[tool.ruff]
+line-length = 100
+target-version = "py311"

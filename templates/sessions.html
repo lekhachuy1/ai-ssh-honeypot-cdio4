@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Phiên SSH — AI SSH Honeypot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><h1>Phiên SSH</h1><p class="muted">Timeline các kết nối đã ghi nhận</p></div></div>
+<section class="panel table-wrap">
+<table>
+  <thead><tr><th>Bắt đầu</th><th>IP:Port</th><th>Username</th><th>Trạng thái</th><th>Phân loại</th><th>Lệnh</th><th>Điểm</th></tr></thead>
+  <tbody>
+  {% for item in sessions %}
+    <tr>
+      <td><a href="/sessions/{{ item.id }}">{{ item.started_at.strftime('%d/%m/%Y %H:%M:%S') }}</a></td>
+      <td>{{ item.source_ip }}:{{ item.source_port }}</td>
+      <td>{{ item.username }}</td>
+      <td>{{ item.status }}</td>
+      <td>{{ item.classification }}</td>
+      <td>{{ item.command_count }}</td>
+      <td><span class="badge {{ item.severity|lower }}">{{ item.risk_score }}/100</span></td>
+    </tr>
+  {% else %}
+    <tr><td colspan="7" class="empty">Chưa có dữ liệu.</td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+</section>
+{% endblock %}

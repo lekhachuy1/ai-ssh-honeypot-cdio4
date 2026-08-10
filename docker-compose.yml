@@ -1,0 +1,29 @@
+services:
+  honeypot:
+    build: .
+    container_name: ai-ssh-honeypot
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+      - "2222:2222"
+    volumes:
+      - honeypot-data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/api/health')"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+
+  ollama:
+    image: ollama/ollama:latest
+    container_name: honeypot-ollama
+    profiles: ["ai"]
+    volumes:
+      - ollama-data:/root/.ollama
+    restart: unless-stopped
+
+volumes:
+  honeypot-data:
+  ollama-data:

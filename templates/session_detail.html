@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}Chi tiết phiên — AI SSH Honeypot{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><h1>Chi tiết phiên</h1><p class="mono muted">{{ item.id }}</p></div>
+  <a class="button secondary" href="/sessions">Quay lại</a>
+</div>
+<section class="details-grid">
+  <article class="panel"><span class="muted">Nguồn</span><strong>{{ item.source_ip }}:{{ item.source_port }}</strong></article>
+  <article class="panel"><span class="muted">Username</span><strong>{{ item.username }}</strong></article>
+  <article class="panel"><span class="muted">Phân loại</span><strong>{{ item.classification }}</strong></article>
+  <article class="panel"><span class="muted">Điểm rủi ro</span><strong class="badge {{ item.severity|lower }}">{{ item.risk_score }}/100</strong></article>
+</section>
+<section class="panel">
+  <h2>Tóm tắt</h2>
+  <p>{{ item.summary or 'Phiên chưa kết thúc hoặc chưa có tóm tắt.' }}</p>
+  <p><strong>MITRE ATT&CK:</strong> {{ item.mitre_techniques.replace(',', ', ') or 'Không có' }}</p>
+</section>
+<section class="panel">
+  <h2>Timeline lệnh</h2>
+  {% for event in item.commands %}
+    <article class="command-card">
+      <div class="command-meta">
+        <span>{{ event.timestamp.strftime('%H:%M:%S') }}</span>
+        <span class="badge {{ event.severity|lower }}">{{ event.risk_score }}</span>
+        {% if event.used_llm %}<span class="badge info">LLM</span>{% endif %}
+        <span>{{ event.labels.replace(',', ' · ') }}</span>
+      </div>
+      <pre class="command">$ {{ event.command }}</pre>
+      <pre class="response">{{ event.response }}</pre>
+    </article>
+  {% else %}
+    <p class="empty">Phiên chưa có lệnh.</p>
+  {% endfor %}
+</section>
+{% endblock %}

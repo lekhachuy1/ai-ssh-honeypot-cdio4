@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}AI SSH Honeypot{% endblock %}</title>
+  <link rel="stylesheet" href="{{ url_for('static', path='/styles.css') }}">
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <strong>AI SSH Honeypot</strong>
+      <span class="muted">CDIO 4</span>
+    </div>
+    <nav>
+      <a href="/">Tổng quan</a>
+      <a href="/sessions">Phiên SSH</a>
+      <a href="/alerts">Cảnh báo</a>
+      <a href="/docs">API</a>
+    </nav>
+  </header>
+  <main class="container">
+    {% block content %}{% endblock %}
+  </main>
+  <footer class="footer">
+    Môi trường lab — không thực thi lệnh hệ điều hành thật.
+  </footer>
+</body>
+</html>

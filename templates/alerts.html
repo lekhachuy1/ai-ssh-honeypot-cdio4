@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Cảnh báo — AI SSH Honeypot{% endblock %}
+{% block content %}
+<div class="page-heading"><div><h1>Cảnh báo</h1><p class="muted">Các lệnh có mức HIGH hoặc CRITICAL</p></div></div>
+<section class="panel">
+  <div class="alert-list">
+  {% for alert in alerts %}
+    <article class="alert-row wide">
+      <span class="badge {{ alert.severity|lower }}">{{ alert.severity }}</span>
+      <div class="grow">
+        <strong>{{ alert.title }}</strong>
+        <p>{{ alert.details }}</p>
+        <a href="/sessions/{{ alert.session_id }}">Mở phiên liên quan</a>
+      </div>
+      {% if alert.acknowledged %}
+        <span class="muted">Đã xác nhận</span>
+      {% else %}
+        <form method="post" action="/alerts/{{ alert.id }}/acknowledge"><button class="button" type="submit">Xác nhận</button></form>
+      {% endif %}
+    </article>
+  {% else %}
+    <p class="empty">Chưa có cảnh báo.</p>
+  {% endfor %}
+  </div>
+</section>
+{% endblock %}

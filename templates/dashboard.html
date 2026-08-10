@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Tổng quan — AI SSH Honeypot{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div>
+    <h1>Tổng quan vận hành</h1>
+    <p class="muted">SSH {{ settings.ssh_host }}:{{ settings.ssh_port }} · AI {{ "bật" if settings.enable_llm else "tắt" }}</p>
+  </div>
+  <a class="button" href="/">Làm mới</a>
+</div>
+
+<section class="stats-grid">
+  <article class="stat"><span>Tổng phiên</span><strong>{{ stats.total_sessions }}</strong></article>
+  <article class="stat"><span>Đang hoạt động</span><strong>{{ stats.active_sessions }}</strong></article>
+  <article class="stat"><span>Nguy hiểm</span><strong>{{ stats.dangerous_sessions }}</strong></article>
+  <article class="stat"><span>Tổng lệnh</span><strong>{{ stats.commands }}</strong></article>
+  <article class="stat"><span>Chưa xác nhận</span><strong>{{ stats.unacknowledged_alerts }}</strong></article>
+</section>
+
+<div class="two-columns">
+  <section class="panel">
+    <div class="panel-title"><h2>Phiên gần đây</h2><a href="/sessions">Xem tất cả</a></div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Thời gian</th><th>Nguồn</th><th>User</th><th>Lệnh</th><th>Mức độ</th></tr></thead>
+        <tbody>
+        {% for item in sessions %}
+          <tr>
+            <td><a href="/sessions/{{ item.id }}">{{ item.started_at.strftime('%d/%m %H:%M:%S') }}</a></td>
+            <td>{{ item.source_ip }}</td>
+            <td>{{ item.username }}</td>
+            <td>{{ item.command_count }}</td>
+            <td><span class="badge {{ item.severity|lower }}">{{ item.severity }}</span></td>
+          </tr>
+        {% else %}
+          <tr><td colspan="5" class="empty">Chưa có phiên. Hãy kết nối SSH hoặc chạy script seed.</td></tr>
+        {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="panel">
+    <div class="panel-title"><h2>Cảnh báo mới</h2><a href="/alerts">Xem tất cả</a></div>
+    <div class="alert-list">
+      {% for alert in alerts %}
+        <article class="alert-row">
+          <span class="badge {{ alert.severity|lower }}">{{ alert.severity }}</span>
+          <div><strong>{{ alert.title }}</strong><p>{{ alert.details }}</p></div>
+          <span class="muted">{{ alert.timestamp.strftime('%H:%M:%S') }}</span>
+        </article>
+      {% else %}
+        <p class="empty">Chưa có cảnh báo.</p>
+      {% endfor %}
+    </div>
+  </section>
+</div>
+{% endblock %}
